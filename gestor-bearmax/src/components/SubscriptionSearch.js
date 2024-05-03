@@ -1,13 +1,43 @@
 import React, { useState, useEffect } from 'react';
-import './SubscriptionSearch.css'; // Asegúrate de que el path es correcto
-import { db } from '../../src/firebaseConfig'; // Ruta corregida según tu estructura
+import './SubscriptionSearch.css';
+import { db, auth } from '../../src/firebaseConfig';
+import { signInWithEmailAndPassword } from "firebase/auth";
 import { collection, query, where, getDocs } from 'firebase/firestore';
+import { useNavigate } from 'react-router-dom';
 
 function SubscriptionSearch() {
     const [phoneNumber, setPhoneNumber] = useState('');
     const [subscriptions, setSubscriptions] = useState([]);
-    const [showLogin, setShowLogin] = useState(false);  // Opcional, según tu requerimiento
-    let pressTimer; // Opcional, según tu requerimiento
+    const navigate = useNavigate();
+    const [showLogin, setShowLogin] = useState(false);
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    let pressTimer;
+
+    const handleLogoPress = () => {
+        pressTimer = window.setTimeout(() => {
+            setShowLogin(true);
+        }, 1000);
+    };
+
+    const handleLogoRelease = () => {
+        clearTimeout(pressTimer);
+    };
+
+    const handleLogin = async () => {
+        if (!email || !password) {
+            alert('Por favor, completa ambos campos: correo electrónico y contraseña.');
+            return;
+        }
+        try {
+            const userCredential = await signInWithEmailAndPassword(auth, email, password);
+            console.log("Inicio de sesión exitoso: ", userCredential.user);
+            navigate('/home', { replace: true }); // Cambio 'state' por 'replace' para mejorar la navegación.
+        } catch (error) {
+            console.error('Error al iniciar sesión:', error);
+            alert(`Error al iniciar sesión: ${error.message}`);
+        }
+    };
 
     const fetchSubscriptions = async () => {
         if (!phoneNumber) {
@@ -30,21 +60,34 @@ function SubscriptionSearch() {
             ...doc.data()
         }));
 
-        // Suponiendo que 'Cuentas' es un array de strings con nombres de plataformas
-        const userSubscriptions = userData.flatMap(user => user.Cuentas.map(cuenta => ({
-            service: cuenta
-        })));
+        const userSubscriptions = userData.map(user => ({
+            id: user.id, 
+            service: user.Cuentas.split(", ")
+        }));
 
         setSubscriptions(userSubscriptions);
     };
 
+    const closeLogin = () => {
+        setShowLogin(false);
+    };
+
     useEffect(() => {
-        // Asegurándose de limpiar el timer si lo usas
         return () => clearTimeout(pressTimer);
     }, []);
 
     return (
         <div className="subscription-search-container">
+            <img
+                src="https://i.ibb.co/q0mVfVX/videofinal.png"
+                alt="Logo de la Empresa"
+                className="company-logo"
+                onMouseDown={handleLogoPress}
+                onMouseUp={handleLogoRelease}
+                onMouseLeave={handleLogoRelease}
+            />
+        
+            <p>Ingresa un número de teléfono para ver las cuentas de streaming vinculadas.</p>
             <input
                 type="tel"
                 value={phoneNumber}
@@ -52,18 +95,34 @@ function SubscriptionSearch() {
                 placeholder="Ingresa el número"
             />
             <button onClick={fetchSubscriptions}>Buscar</button>
-
             {subscriptions.length > 0 && (
                 <ul className="subscriptions-list">
-                    {subscriptions.map((sub, idx) => (
-                        <li key={idx} className="subscription-item">
-                            {sub.service}
-                        </li>
-                    ))}
+                    {subscriptions.flatMap(sub => sub.service.map((service, idx) => (
+                        <li key={idx} className="subscription-item">{service}</li>
+                    )))}
                 </ul>
+            )}
+            {showLogin && (
+                <div className="login-modal">
+                    <h2>Iniciar Sesión</h2>
+                    <input
+                        type="email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        placeholder="Correo electrónico"
+                    />
+                    <input
+                        type="password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        placeholder="Contraseña"
+                    />
+                    <button onClick={handleLogin}>Iniciar Sesión</button>
+                    <button onClick={closeLogin}>Cerrar</button>
+                </div>
             )}
         </div>
     );
 }
-export default SubscriptionSearch;
 
+export default SubscriptionSearch;

@@ -60,6 +60,7 @@ body {
     border: none;
     border-radius: 8px;
     cursor: pointer;
+    margin-top: 20px;
 }
 
 .subscription-search-container button:hover {
