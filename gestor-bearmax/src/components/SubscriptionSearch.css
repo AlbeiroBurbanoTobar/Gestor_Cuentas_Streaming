@@ -32,7 +32,7 @@ body {
     color: #ddd;
 }
 
-.subscription-search-container input[type="text"] {
+.subscription-search-container input[type="tel"] {
     width: 100%; /* Cambiado para llenar el ancho del contenedor */
     height: 30px;
     padding: -20px;
