@@ -39,6 +39,17 @@ body {
     margin-bottom: 10px;
     border: none;
     border-radius: 8px;
+    text-align: center;
+}
+
+.subscription-search-container input[type="email"],
+.subscription-search-container input[type="password"] {
+    width: 100%; /* Llena el ancho del contenedor */
+    height: 30px;
+    padding: -20px 10px; /* Corregido para mejorar la apariencia */
+    margin-bottom: 10px;
+    border: none;
+    border-radius: 8px;
 }
 
 .subscription-search-container button {
