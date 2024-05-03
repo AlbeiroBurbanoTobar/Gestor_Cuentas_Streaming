@@ -1,76 +1,154 @@
+body {
+    background-image: url('https://i.ibb.co/LgqZpk9/Portada-fondo.png'); 
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
 
-/* Contenedor principal del componente */
 .subscription-search-container {
     padding: 20px;
     max-width: 500px;
     margin: 0 auto;
-    border: 1px solid #eaeaea;
+    border: 1px solid rgba(255, 255, 255, 0.2);
     border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    background-color: #fff;
+    background-color: rgba(0, 0, 0, 0.9);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.6);
+    color: #fff;
 }
 
-/* Estilos para el título principal */
 .subscription-search-container h1 {
     text-align: center;
     font-size: 1.5em;
+    color: #fff;
 }
 
-/* Estilos para el texto descriptivo */
 .subscription-search-container p {
     text-align: center;
     font-size: 1em;
-    color: #666;
+    color: #ddd;
 }
 
-/* Estilos para el campo de entrada de texto */
 .subscription-search-container input[type="text"] {
-    width: 100%;
-    padding: 8px;
+    width: 100%; /* Cambiado para llenar el ancho del contenedor */
+    height: 30px;
+    padding: -20px;
     margin-bottom: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
+    border: none;
+    border-radius: 8px;
 }
 
-/* Estilos para el botón de búsqueda */
 .subscription-search-container button {
     width: 100%;
-    padding: 8px;
-    background-color: #333;
+    padding: 10px;
+    background-color: #555;
     color: #fff;
     border: none;
-    border-radius: 4px;
+    border-radius: 8px;
     cursor: pointer;
 }
 
-/* Estilos para el botón de búsqueda al pasar el mouse por encima */
 .subscription-search-container button:hover {
-    background-color: #444;
+    background-color: #414040;
 }
 
-/* Lista de suscripciones */
 .subscriptions-list {
     margin-top: 20px;
     list-style-type: none;
     padding: 0;
 }
 
-/* Estilos para cada elemento de la lista de suscripciones */
-.subscriptions-list li {
+.subscriptions-list li.subscription-item {
+    display: flex;
+    align-items: center;
     padding: 10px;
-    border: 1px solid #eaeaea;
+    border: 1px solid rgba(255, 255, 255, 0.2);
     border-radius: 4px;
     margin-bottom: 10px;
-    background-color: #f9f9f9;
+    background-color: rgba(128, 126, 126, 0.2);
 }
 
-/* Fuente destacada para el nombre del servicio */
-.subscriptions-list li strong {
+.subscription-image {
+    width: 50%;
+    height: 30%;
+    margin-right: 10px;
+    object-fit: contain;
+}
+
+.subscription-details {
     font-size: 1.2em;
+    color: #fff;
 }
 
-/* Estilos para la información de fechas */
-.subscriptions-list li .dates {
+.subscription-details .dates {
     font-size: 0.9em;
-    color: #777;
+    color: #ccc;
+}
+
+@media (max-width: 768px) {
+    .subscription-search-container {
+        padding: 10px;
+        max-width: 100%;
+    }
+
+    .subscription-search-container h1 {
+        font-size: 1.2em;
+    }
+
+    .subscription-search-container p {
+        font-size: 0.9em;
+    }
+
+    .subscriptions-list li.subscription-item {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .subscription-image {
+        margin-bottom: 10px;
+    }
+
+    .subscription-details {
+        text-align: center;
+        font-size: 1em;
+        color: #fff;
+    }
+}
+
+@media (max-width: 480px) {
+    .subscription-search-container {
+        padding: 5%;
+    }
+
+    .subscription-search-container h1 {
+        font-size: 1em;
+    }
+
+    .subscription-search-container p {
+        font-size: 0.8em;
+    }
+
+    .subscriptions-list li.subscription-item {
+        padding: 5%;
+    }
+
+    .subscription-details {
+        font-size: 0.9em;
+    }
+}
+
+.company-logo {
+    display: block;
+    max-width: 240px; /* ajusta según tus necesidades */
+    margin: 10px auto 20px;
+    height: auto;
+}
+
+@media (max-width: 768px) {
+    .company-logo {
+        max-width: 180px; /* más pequeño en dispositivos móviles */
+    }
 }
