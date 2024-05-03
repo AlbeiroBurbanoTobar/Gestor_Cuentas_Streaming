@@ -1,93 +1,69 @@
 import React, { useState, useEffect } from 'react';
-import './SubscriptionSearch.css';
+import './SubscriptionSearch.css'; // Asegúrate de que el path es correcto
+import { db } from '../../src/firebaseConfig'; // Ruta corregida según tu estructura
+import { collection, query, where, getDocs } from 'firebase/firestore';
 
 function SubscriptionSearch() {
-    const [phoneNumber, setPhoneNumber] = useState('');  // Estado para guardar el número de teléfono
-    const [subscriptions, setSubscriptions] = useState([]);  // Estado para guardar las suscripciones
-    const [showLogin, setShowLogin] = useState(false);  // Estado para controlar la visibilidad de la interfaz de inicio de sesión
-    let pressTimer; // Variable para almacenar el temporizador
+    const [phoneNumber, setPhoneNumber] = useState('');
+    const [subscriptions, setSubscriptions] = useState([]);
+    const [showLogin, setShowLogin] = useState(false);  // Opcional, según tu requerimiento
+    let pressTimer; // Opcional, según tu requerimiento
 
-    // Función para simular la carga de suscripciones
     const fetchSubscriptions = async () => {
-        const fetchedSubscriptions = [
-            { service: 'Netflix', startDate: '01/01/2021', endDate: '31/12/2023', image: 'https://i.ibb.co/Xx4hWw2/disney.png' },
-        ];
-        setSubscriptions(fetchedSubscriptions);
-    };
+        if (!phoneNumber) {
+            alert("Por favor, ingresa un número de teléfono.");
+            return;
+        }
 
-    // Manejador para cuando se presiona el logo
-    const handleLogoPress = () => {
-        pressTimer = window.setTimeout(() => {
-            setShowLogin(true);  // Activa la interfaz de inicio de sesión después de 500 ms
-        }, 1000); // Define el tiempo que el usuario debe mantener presionado (1000 ms en este ejemplo)
-    };
+        const usersRef = collection(db, "Usuarios");
+        const q = query(usersRef, where("Numero", "==", phoneNumber));
 
-    // Manejador para cuando se suelta el logo
-    const handleLogoRelease = () => {
-        clearTimeout(pressTimer); // Cancela el temporizador si el usuario suelta antes de tiempo
-    };
+        const querySnapshot = await getDocs(q);
+        if (querySnapshot.empty) {
+            setSubscriptions([]);
+            alert("No se encontraron suscripciones para este número de teléfono.");
+            return;
+        }
 
-    // Función para cerrar la interfaz de inicio de sesión
-    const closeLogin = () => {
-        setShowLogin(false);  // Desactiva la interfaz de inicio de sesión
+        const userData = querySnapshot.docs.map(doc => ({
+            id: doc.id,
+            ...doc.data()
+        }));
+
+        // Suponiendo que 'Cuentas' es un array de strings con nombres de plataformas
+        const userSubscriptions = userData.flatMap(user => user.Cuentas.map(cuenta => ({
+            service: cuenta
+        })));
+
+        setSubscriptions(userSubscriptions);
     };
 
     useEffect(() => {
-        return () => {
-            // Limpieza al desmontar el componente
-            clearTimeout(pressTimer);
-        };
+        // Asegurándose de limpiar el timer si lo usas
+        return () => clearTimeout(pressTimer);
     }, []);
 
     return (
         <div className="subscription-search-container">
-        <img
-             src="https://i.ibb.co/q0mVfVX/videofinal.png"
-             alt="Logo de la Empresa"
-             className="company-logo"
-             onMouseDown={handleLogoPress}
-             onMouseUp={handleLogoRelease}
-             onMouseLeave={handleLogoRelease}  // Asegura que el temporizador se cancele si el cursor deja el área del logo
-        />
+            <input
+                type="tel"
+                value={phoneNumber}
+                onChange={(e) => setPhoneNumber(e.target.value)}
+                placeholder="Ingresa el número"
+            />
+            <button onClick={fetchSubscriptions}>Buscar</button>
 
-        <h1>Buscar número de teléfono</h1>
-        <p>Ingresa un número de teléfono para ver las cuentas de streaming vinculadas.</p>
-
-        <input
-            type="tel"
-            value={phoneNumber}
-            onChange={(e) => setPhoneNumber(e.target.value)}
-            placeholder="Ingresa el número"
-        />
-
-        <button onClick={fetchSubscriptions}>Buscar</button>
-
-        {showLogin && ( // Renderizado condicional
-            <div className="login-modal">
-                <h2>Iniciar Sesión</h2>
-                <input type="email" placeholder="Correo electrónico" />
-                <input type="password" placeholder="Contraseña" />
-                <button onClick={closeLogin}>Iniciar Sesión</button>
-            </div>
-        )}
-
-        <ul className="subscriptions-list">
-            {subscriptions.map((sub, idx) => (
-                <li key={idx} className="subscription-item">
-                    <img src={sub.image} alt={sub.service} className="subscription-image" />
-                    <div className="subscription-details">
-                        <strong>{sub.service}</strong>
-                        <div className="dates">
-                            Suscripción activa desde el {sub.startDate}<br />
-                            Vence el {sub.endDate}
-                        </div>
-                    </div>
-                </li>
-            ))}
-        </ul>
-    </div>
-);
-
+            {subscriptions.length > 0 && (
+                <ul className="subscriptions-list">
+                    {subscriptions.map((sub, idx) => (
+                        <li key={idx} className="subscription-item">
+                            {sub.service}
+                        </li>
+                    ))}
+                </ul>
+            )}
+        </div>
+    );
 }
-
 export default SubscriptionSearch;
+
