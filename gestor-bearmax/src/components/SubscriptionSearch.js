@@ -4,6 +4,7 @@ import { db, auth } from '../../src/firebaseConfig';
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { collection, query, where, getDocs } from 'firebase/firestore';
 import { useNavigate } from 'react-router-dom';
+import { format } from 'date-fns'; // Importando la función format
 
 function SubscriptionSearch() {
     const [phoneNumber, setPhoneNumber] = useState('');
@@ -14,7 +15,13 @@ function SubscriptionSearch() {
     const [password, setPassword] = useState('');
     let pressTimer;
 
-    // Manejadores para mostrar el login al presionar el logo
+    const serviceLogos = {
+        'Netflix': 'https://i.ibb.co/jkXvz7M/netflix.png',
+        'Disney+': 'https://i.ibb.co/jkXvz7M/netflix.png',
+        'Prime Video': 'https://i.ibb.co/rc2Hj7y/max.png',
+        // Añadir más servicios según sea necesario
+    };
+
     const handleLogoPress = () => {
         pressTimer = window.setTimeout(() => {
             setShowLogin(true);
@@ -25,7 +32,6 @@ function SubscriptionSearch() {
         clearTimeout(pressTimer);
     };
 
-    // Función para manejar el inicio de sesión
     const handleLogin = async () => {
         if (!email || !password) {
             alert('Por favor, completa ambos campos: correo electrónico y contraseña.');
@@ -41,7 +47,6 @@ function SubscriptionSearch() {
         }
     };
 
-    // Función para buscar suscripciones asociadas a un número de teléfono
     const fetchSubscriptions = async () => {
         if (!phoneNumber) {
             alert("Por favor, ingresa un número de teléfono.");
@@ -63,18 +68,17 @@ function SubscriptionSearch() {
             ...doc.data()
         }));
 
-        const userSubscriptions = userData.map(user => ({
+        const updatedSubscriptions = userData.map(user => ({
             id: user.id, 
             service: user.service.split(", "),
-            startDate: user.startDate,
-            endDate: user.endDate,
+            startDate: format(new Date(user.startDate), 'yyyy-MM-dd'), // Formateando la fecha
+            endDate: format(new Date(user.endDate), 'yyyy-MM-dd'), // Formateando la fecha
             daysRemaining: calculateDaysRemaining(user.endDate)
         }));
 
-        setSubscriptions(userSubscriptions);
+        setSubscriptions(updatedSubscriptions);
     };
 
-    // Calcular los días restantes hasta la endDate
     const calculateDaysRemaining = (endDate) => {
         const today = new Date();
         const end = new Date(endDate);
@@ -113,11 +117,14 @@ function SubscriptionSearch() {
                     {subscriptions.map((sub, index) => (
                         <li key={index} className="subscription-item">
                             {sub.service.map(service => (
-                                <div key={service}>
-                                    Servicio: {service} <br/>
-                                    Fecha de inicio: {sub.startDate} <br/>
-                                    Fecha de finalización: {sub.endDate} <br/>
-                                    Días restantes: {sub.daysRemaining}
+                                <div key={service} className="subscription-detail">
+                                    <img src={serviceLogos[service]} alt={service} className="subscription-logo"/>
+                                    <div>
+                                        Servicio: {service} <br/>
+                                        Fecha de inicio: {sub.startDate} <br/>
+                                        Fecha de finalización: {sub.endDate} <br/>
+                                        Días restantes: {sub.daysRemaining}
+                                    </div>
                                 </div>
                             ))}
                         </li>

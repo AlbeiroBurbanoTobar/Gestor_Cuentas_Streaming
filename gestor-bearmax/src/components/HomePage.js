@@ -108,9 +108,12 @@ function HomePage() {
                         >
                             <option value="">Selecciona un servicio</option>
                             <option value="Netflix">Netflix</option>
-                            <option value="HBO">HBO</option>
+                            <option value="HBO">MAX</option>
                             <option value="Disney plus">Disney plus</option>
                             <option value="Paramount">Paramount</option>
+                            <option value="Prime Video">Prime Video</option>
+                            <option value="Crunchyroll">Crunchyroll</option>
+                            <option value="Star plus">Star plus</option>
                         </select>
                     </div>
                     <button type="submit" style={styles.button}>Enviar</button>
