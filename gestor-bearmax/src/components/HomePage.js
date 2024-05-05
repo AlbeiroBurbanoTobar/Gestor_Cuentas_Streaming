@@ -1,19 +1,32 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { signOut } from "firebase/auth";
-import { auth } from '../../src/firebaseConfig';
+import { auth, db } from '../../src/firebaseConfig';
 import { useLocation, useNavigate } from 'react-router-dom';
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
+import { doc, setDoc, getDoc, updateDoc } from 'firebase/firestore';
 
 function HomePage() {
-    const location = useLocation();
     const navigate = useNavigate();
-    const user = location.state?.user || { email: "Invitado" };
-
     const [phoneNumber, setPhoneNumber] = useState('');
     const [startDate, setStartDate] = useState(new Date());
     const [endDate, setEndDate] = useState(new Date());
     const [service, setService] = useState('');
+    const [userCount, setUserCount] = useState(null);
+
+    // Cargar el contador al cargar el componente
+    useEffect(() => {
+        const loadUserCount = async () => {
+            const countRef = doc(db, "Config", "UserCounter");
+            const countSnap = await getDoc(countRef);
+            if (countSnap.exists()) {
+                setUserCount(countSnap.data().count);
+            } else {
+                console.log("No user counter document found");
+            }
+        };
+        loadUserCount();
+    }, []);
 
     const handleSignOut = async () => {
         try {
@@ -25,25 +38,40 @@ function HomePage() {
         }
     };
 
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
         event.preventDefault();
+        if (userCount === null) {
+            alert('El contador de usuarios no está disponible.');
+            return;
+        }
+
+        const nextUserNumber = userCount + 1;
+        const userName = `usuario${nextUserNumber}`;
         const subscriptionData = {
+            email: userName,
             phoneNumber,
-            startDate,
-            endDate,
+            startDate: startDate.toISOString(), 
+            endDate: endDate.toISOString(),
             service
         };
-        console.log(subscriptionData);
-        // Aquí podrías enviar los datos a Firebase o manejarlos como necesites
+
+        try {
+            const userRef = doc(db, "Usuarios", userName);
+            await setDoc(userRef, subscriptionData);
+            await updateDoc(doc(db, "Config", "UserCounter"), { count: nextUserNumber });
+            setUserCount(nextUserNumber);  // Actualizar el estado local con el nuevo contador
+            alert('Datos guardados exitosamente bajo el nombre ' + userName);
+        } catch (error) {
+            alert('Error al guardar datos: ' + error.message);
+        }
     };
 
     return (
         <div style={styles.container}>
             <div style={styles.content}>
-                <h1 style={styles.header}>Bienvenido, {user.email}!</h1>
+                <h1 style={styles.header}>Bienvenido!</h1>
                 <p style={styles.subHeader}>Has iniciado sesión exitosamente en nuestra plataforma.</p>
                 <button style={styles.button} onClick={handleSignOut}>Cerrar Sesión</button>
-
                 <h2 style={styles.formTitle}>Registrar nueva suscripción</h2>
                 <form onSubmit={handleSubmit} style={styles.form}>
                     <div style={styles.formGroup}>
@@ -51,8 +79,8 @@ function HomePage() {
                         <input
                             type="tel"
                             value={phoneNumber}
-                            style={styles.input}
                             onChange={(e) => setPhoneNumber(e.target.value)}
+                            style={styles.input}
                         />
                     </div>
                     <div style={styles.formGroup}>
@@ -73,11 +101,15 @@ function HomePage() {
                     </div>
                     <div style={styles.formGroup}>
                         <label style={styles.label}>Servicio de streaming:</label>
-                        <select value={service} onChange={(e) => setService(e.target.value)} style={styles.select}>
+                        <select
+                            value={service}
+                            onChange={(e) => setService(e.target.value)}
+                            style={styles.select}
+                        >
                             <option value="">Selecciona un servicio</option>
                             <option value="Netflix">Netflix</option>
                             <option value="HBO">HBO</option>
-                            <option value="Disney+">Disney+</option>
+                            <option value="Disney plus">Disney plus</option>
                             <option value="Paramount">Paramount</option>
                         </select>
                     </div>
@@ -88,6 +120,7 @@ function HomePage() {
     );
 }
 
+// Estilos aquí
 const styles = {
     container: {
         display: 'flex',
@@ -160,5 +193,4 @@ const styles = {
         margin: '20px 0'
     }
 };
-
 export default HomePage;

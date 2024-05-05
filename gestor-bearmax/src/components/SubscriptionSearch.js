@@ -14,6 +14,7 @@ function SubscriptionSearch() {
     const [password, setPassword] = useState('');
     let pressTimer;
 
+    // Manejadores para mostrar el login al presionar el logo
     const handleLogoPress = () => {
         pressTimer = window.setTimeout(() => {
             setShowLogin(true);
@@ -24,6 +25,7 @@ function SubscriptionSearch() {
         clearTimeout(pressTimer);
     };
 
+    // Función para manejar el inicio de sesión
     const handleLogin = async () => {
         if (!email || !password) {
             alert('Por favor, completa ambos campos: correo electrónico y contraseña.');
@@ -32,13 +34,14 @@ function SubscriptionSearch() {
         try {
             const userCredential = await signInWithEmailAndPassword(auth, email, password);
             console.log("Inicio de sesión exitoso: ", userCredential.user);
-            navigate('/home', { replace: true }); // Cambio 'state' por 'replace' para mejorar la navegación.
+            navigate('/home', { replace: true });
         } catch (error) {
             console.error('Error al iniciar sesión:', error);
             alert(`Error al iniciar sesión: ${error.message}`);
         }
     };
 
+    // Función para buscar suscripciones asociadas a un número de teléfono
     const fetchSubscriptions = async () => {
         if (!phoneNumber) {
             alert("Por favor, ingresa un número de teléfono.");
@@ -46,9 +49,9 @@ function SubscriptionSearch() {
         }
 
         const usersRef = collection(db, "Usuarios");
-        const q = query(usersRef, where("Numero", "==", phoneNumber));
-
+        const q = query(usersRef, where("phoneNumber", "==", phoneNumber));
         const querySnapshot = await getDocs(q);
+
         if (querySnapshot.empty) {
             setSubscriptions([]);
             alert("No se encontraron suscripciones para este número de teléfono.");
@@ -62,10 +65,20 @@ function SubscriptionSearch() {
 
         const userSubscriptions = userData.map(user => ({
             id: user.id, 
-            service: user.Cuentas.split(", ")
+            service: user.service.split(", "),
+            startDate: user.startDate,
+            endDate: user.endDate,
+            daysRemaining: calculateDaysRemaining(user.endDate)
         }));
 
         setSubscriptions(userSubscriptions);
+    };
+
+    // Calcular los días restantes hasta la endDate
+    const calculateDaysRemaining = (endDate) => {
+        const today = new Date();
+        const end = new Date(endDate);
+        return Math.max(Math.ceil((end - today) / (1000 * 60 * 60 * 24)), 0);
     };
 
     const closeLogin = () => {
@@ -97,9 +110,18 @@ function SubscriptionSearch() {
             <button onClick={fetchSubscriptions}>Buscar</button>
             {subscriptions.length > 0 && (
                 <ul className="subscriptions-list">
-                    {subscriptions.flatMap(sub => sub.service.map((service, idx) => (
-                        <li key={idx} className="subscription-item">{service}</li>
-                    )))}
+                    {subscriptions.map((sub, index) => (
+                        <li key={index} className="subscription-item">
+                            {sub.service.map(service => (
+                                <div key={service}>
+                                    Servicio: {service} <br/>
+                                    Fecha de inicio: {sub.startDate} <br/>
+                                    Fecha de finalización: {sub.endDate} <br/>
+                                    Días restantes: {sub.daysRemaining}
+                                </div>
+                            ))}
+                        </li>
+                    ))}
                 </ul>
             )}
             {showLogin && (
