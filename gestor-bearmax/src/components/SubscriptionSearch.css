@@ -68,7 +68,7 @@ body {
 }
 
 .subscriptions-list {
-    margin-top: 20px;
+    margin-top: 30px;
     list-style-type: none;
     padding: 0;
 }
@@ -76,10 +76,11 @@ body {
 .subscriptions-list li.subscription-item {
     display: flex;
     align-items: center;
-    padding: 10px;
+    padding: 1px;
+    margin: 5px 0; 
     border: 1px solid rgba(255, 255, 255, 0.2);
     border-radius: 4px;
-    margin-bottom: 10px;
+    margin-bottom: 1px;
     background-color: rgba(128, 126, 126, 0.2);
 }
 
@@ -91,9 +92,15 @@ body {
 }
 
 .subscription-details {
-    font-size: 1.2em;
-    color: #fff;
+    display: flex;
+    flex-direction: column; /* Organiza los hijos en una columna */
+    align-items: center; /* Centra los hijos horizontalmente en el contenedor */
+    text-align: center; /* Asegura que el texto también esté centrado */
+    width: 100%; /* Opcional: depende de cómo desees manejar el ancho */
+    padding: 10px; /* Ajusta según necesidad para espaciado interno */
+    margin: auto; /* Centra el contenedor dentro de cualquier contenedor padre, si es necesario */
 }
+
 
 .subscription-details .dates {
     font-size: 0.9em;
@@ -164,3 +171,31 @@ body {
         max-width: 180px; /* más pequeño en dispositivos móviles */
     }
 }
+
+.subscription-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 5px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 4px;
+    margin-bottom: 5px;
+    background-color: rgba(128, 126, 126, 0.2);
+}
+.subscription-logo {
+    width: 230px; /* Ajusta según tus necesidades */
+    height: 130px;
+    margin-right: 10px;
+    object-fit: contain;
+}
+.button-container {
+    display: flex;
+    justify-content: center;  
+    align-items: center;      
+}
+.service-detail {
+    font-size: 1.1em;
+    font-weight: bold;
+}
+
+

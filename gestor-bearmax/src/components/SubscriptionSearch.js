@@ -17,9 +17,12 @@ function SubscriptionSearch() {
 
     const serviceLogos = {
         'Netflix': 'https://i.ibb.co/jkXvz7M/netflix.png',
-        'Disney+': 'https://i.ibb.co/jkXvz7M/netflix.png',
-        'Prime Video': 'https://i.ibb.co/rc2Hj7y/max.png',
-        // Añadir más servicios según sea necesario
+        'Disney plus': 'https://i.ibb.co/Xx4hWw2/disney.png',
+        'Paramount': 'https://i.ibb.co/vJJmmKW/paramoun.png',
+        'Prime Video': 'https://i.ibb.co/JQ96rsb/Primem.png',
+        'Crunchyroll': 'https://i.ibb.co/6NMRkBK/Crunchi.png',
+        'Star plus': 'https://raw.githubusercontent.com/AlbeiroBurbano/ImagenesIconos/main/starplus.png'
+        // Añade más servicios y sus logos según sea necesario
     };
 
     const handleLogoPress = () => {
@@ -93,6 +96,7 @@ function SubscriptionSearch() {
         return () => clearTimeout(pressTimer);
     }, []);
 
+    
     return (
         <div className="subscription-search-container">
             <img
@@ -116,17 +120,13 @@ function SubscriptionSearch() {
                 <ul className="subscriptions-list">
                     {subscriptions.map((sub, index) => (
                         <li key={index} className="subscription-item">
-                            {sub.service.map(service => (
-                                <div key={service} className="subscription-detail">
-                                    <img src={serviceLogos[service]} alt={service} className="subscription-logo"/>
-                                    <div>
-                                        Servicio: {service} <br/>
-                                        Fecha de inicio: {sub.startDate} <br/>
-                                        Fecha de finalización: {sub.endDate} <br/>
-                                        Días restantes: {sub.daysRemaining}
-                                    </div>
-                                </div>
-                            ))}
+                            <img src={serviceLogos[sub.service]} alt={sub.service} className="subscription-logo"/>
+                            <div className="subscription-details">
+                                <div className="service-detail">{sub.service}</div>
+                                Suscripción activa desde el  {sub.startDate} <br/>
+                                Vence {sub.endDate} <br/>
+                                Días restantes: {sub.daysRemaining}
+                            </div>
                         </li>
                     ))}
                 </ul>

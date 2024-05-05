@@ -6,6 +6,7 @@ import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
 import { doc, setDoc, getDoc, updateDoc } from 'firebase/firestore';
 
+
 function HomePage() {
     const navigate = useNavigate();
     const [phoneNumber, setPhoneNumber] = useState('');
@@ -32,11 +33,12 @@ function HomePage() {
         try {
             await signOut(auth);
             alert('Has cerrado sesión exitosamente.');
-            navigate('/login');
+            navigate('/'); // Asegúrate de que esta ruta corresponde a SubscriptionSearch en tu configuración de rutas
         } catch (error) {
             alert('Error al cerrar sesión: ' + error.message);
         }
     };
+    
 
     const handleSubmit = async (event) => {
         event.preventDefault();
@@ -69,9 +71,12 @@ function HomePage() {
     return (
         <div style={styles.container}>
             <div style={styles.content}>
-                <h1 style={styles.header}>Bienvenido!</h1>
+                <h1 style={styles.header}>Joa Mani!</h1>
                 <p style={styles.subHeader}>Has iniciado sesión exitosamente en nuestra plataforma.</p>
-                <button style={styles.button} onClick={handleSignOut}>Cerrar Sesión</button>
+                <div className="button-container">
+                    <button style={styles.button} onClick={handleSignOut}>Cerrar Sesión</button>
+                </div>
+
                 <h2 style={styles.formTitle}>Registrar nueva suscripción</h2>
                 <form onSubmit={handleSubmit} style={styles.form}>
                     <div style={styles.formGroup}>
