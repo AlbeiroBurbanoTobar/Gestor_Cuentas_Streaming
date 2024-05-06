@@ -16,12 +16,26 @@ function SubscriptionSearch() {
     let pressTimer;
 
     const serviceLogos = {
-        'Netflix': 'https://i.ibb.co/jkXvz7M/netflix.png',
-        'Disney plus': 'https://i.ibb.co/Xx4hWw2/disney.png',
-        'Paramount': 'https://i.ibb.co/vJJmmKW/paramoun.png',
-        'Prime Video': 'https://i.ibb.co/JQ96rsb/Primem.png',
-        'Crunchyroll': 'https://i.ibb.co/6NMRkBK/Crunchi.png',
-        'Star plus': 'https://raw.githubusercontent.com/AlbeiroBurbano/ImagenesIconos/main/starplus.png'
+        'Netflix': 'https://i.ibb.co/12fGpvt/netflix.png',
+        'Disney plus': 'https://i.ibb.co/PM3rHk5/disney.png',
+        'Paramount': 'https://i.ibb.co/3c8VKz7/paramount.png',
+        'Prime Video': 'https://i.ibb.co/dGnWBK1/Prime.png',
+        'Crunchyroll': 'https://i.ibb.co/QvsjVxW/crunchi.png',
+        'Star plus': 'https://i.ibb.co/gvtkbSx/Untitled-design.png',
+        'MAX': 'https://raw.githubusercontent.com/AlbeiroBurbano/ImagenesIconos/main/max.png',
+        'Spotify': 'https://i.ibb.co/kSVmdPc/Spotify-1.png',
+        'Canva Pro': 'https://i.ibb.co/0j7HtBV/canva.png',
+        'Apple TV': 'https://i.ibb.co/WHdFPg5/Apletv.png',
+        'IPTV': 'https://i.ibb.co/S6V37w5/iptv.png',
+        'El profe net': 'https://i.ibb.co/bF1PBLT/net.png',
+        'Smart One IPTV': 'https://i.ibb.co/cLFbWvY/Smart.png',
+        'YouTube Premium': 'https://i.ibb.co/VMQDPrf/Youtu.png',
+        'PornHub': 'https://i.ibb.co/80bK6Mm/porn.png',
+        'Vix': 'https://i.ibb.co/23swSVk/vix.png',
+        'Plex': 'https://i.ibb.co/4wqqPMq/Plex.png',
+        'Viki': 'https://i.ibb.co/0GV26V2/viki.png',
+        'DuplexPlay': 'https://i.ibb.co/kM7KLpW/duplex.png',
+
         // Añade más servicios y sus logos según sea necesario
     };
 
@@ -52,7 +66,7 @@ function SubscriptionSearch() {
 
     const fetchSubscriptions = async () => {
         if (!phoneNumber) {
-            alert("Por favor, ingresa un número de teléfono.");
+            alert("Por favor, ingresa un número de celular vinculada a tu cuenta de whatsapp.");
             return;
         }
 
@@ -62,7 +76,7 @@ function SubscriptionSearch() {
 
         if (querySnapshot.empty) {
             setSubscriptions([]);
-            alert("No se encontraron suscripciones para este número de teléfono.");
+            alert("No se encontraron suscripciones para este número de celular.");
             return;
         }
 
@@ -108,27 +122,30 @@ function SubscriptionSearch() {
                 onMouseLeave={handleLogoRelease}
             />
         
-            <p>Ingresa un número de teléfono para ver las cuentas de streaming vinculadas.</p>
+            <p>Ingresa el número de celular vinculado a tu cuenta de WhatsApp para ver las cuentas 
+                de streaming asociadas.
+            </p>
             <input
                 type="tel"
                 value={phoneNumber}
                 onChange={(e) => setPhoneNumber(e.target.value)}
-                placeholder="Ingresa el número"
+                placeholder="Ingresa tu número de celular"
             />
             <button onClick={fetchSubscriptions}>Buscar</button>
             {subscriptions.length > 0 && (
                 <ul className="subscriptions-list">
                     {subscriptions.map((sub, index) => (
-                        <li key={index} className="subscription-item">
-                            <img src={serviceLogos[sub.service]} alt={sub.service} className="subscription-logo"/>
-                            <div className="subscription-details">
-                                <div className="service-detail">{sub.service}</div>
-                                Suscripción activa desde el  {sub.startDate} <br/>
-                                Vence {sub.endDate} <br/>
-                                Días restantes: {sub.daysRemaining}
-                            </div>
-                        </li>
-                    ))}
+                    <li key={index} className="subscription-item">
+                        <img src={serviceLogos[sub.service]} alt={sub.service} className="subscription-logo"/>
+                        <div className="subscription-details">
+                            <div className="service-detail">{sub.service}</div>
+                            Suscripción activa desde el {sub.startDate} <br/>
+                            Vence {sub.endDate} <br/>
+                            Días restantes: {sub.daysRemaining}
+                        </div>
+                    </li>
+                ))}
+
                 </ul>
             )}
             {showLogin && (

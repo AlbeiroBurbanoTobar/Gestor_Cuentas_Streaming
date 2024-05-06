@@ -68,9 +68,14 @@ body {
 }
 
 .subscriptions-list {
-    margin-top: 30px;
+    max-height: 300px; /* Altura máxima del contenedor de la lista */
+    overflow-y: auto; /* Permite desplazamiento vertical si el contenido excede la altura */
+    margin-top: 20px;
     list-style-type: none;
     padding: 0;
+    background: rgba(0,0,0,0.6); /* Fondo oscuro con algo de transparencia */
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.6);
 }
 
 .subscriptions-list li.subscription-item {
@@ -175,19 +180,20 @@ body {
 .subscription-item {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    padding: 5px;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 4px;
-    margin-bottom: 5px;
-    background-color: rgba(128, 126, 126, 0.2);
+    padding: 10px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1); /* Línea sutil entre ítems */
+    color: white; /* Texto en blanco para mayor legibilidad */
 }
 .subscription-logo {
-    width: 230px; /* Ajusta según tus necesidades */
-    height: 130px;
+    max-width: 150px;  /* Máximo ancho */
+    max-height: 100px; /* Máxima altura */
+    width: auto;       /* Ancho automático basado en la altura */
+    height: auto;      /* Altura automática basada en el ancho */
+    border-radius: 8px;  /* Opcional: para bordes redondeados */
     margin-right: 10px;
-    object-fit: contain;
 }
+
+
 .button-container {
     display: flex;
     justify-content: center;  

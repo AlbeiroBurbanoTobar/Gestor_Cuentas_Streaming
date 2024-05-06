@@ -17,6 +17,7 @@ function HomePage() {
     const [userCount, setUserCount] = useState(null);
     const [showModal, setShowModal] = useState(false);
     const [subscriptionsToDisplay, setSubscriptionsToDisplay] = useState([]);
+    const [totalUsers, setTotalUsers] = useState(0); // Estado para almacenar el total de usuarios
 
     // Cargar el contador al cargar el componente
     useEffect(() => {
@@ -30,8 +31,21 @@ function HomePage() {
             }
         };
         loadUserCount();
+
+        const loadTotalUsers = async () => {
+            try {
+                const subsRef = collection(db, "Usuarios");
+                const querySnapshot = await getDocs(subsRef);
+                setTotalUsers(querySnapshot.docs.length);
+            } catch (error) {
+                console.error("Error loading total users: ", error);
+            }
+        };
+        loadTotalUsers();
+
     }, []);
 
+    
     const fetchSubscriptionsByEndDate = async () => {
         const subsRef = collection(db, "Usuarios");
         const q = query(subsRef, where("endDate", "<=", filterDate.toISOString()));
@@ -98,6 +112,10 @@ function HomePage() {
             <div style={styles.content}>
                 <h1 style={styles.header}>Joa Mani!</h1>
                 <p style={styles.subHeader}>Has iniciado sesión exitosamente en nuestra plataforma.</p>
+                      {/* Muestra el número total de usuarios */}
+            <div style={styles.totalUsersDisplay}>
+                <p>Total de Usuarios Registrados: {totalUsers}</p>
+            </div>
                 <div className="button-container">
                     <button style={styles.button} onClick={handleSignOut}>Cerrar Sesión</button>
                     <button style={styles.button} onClick={() => setShowModal(true)}>Borrar suscripciones</button>
@@ -162,12 +180,26 @@ function HomePage() {
                         >
                             <option value="">Selecciona un servicio</option>
                             <option value="Netflix">Netflix</option>
-                            <option value="HBO">MAX</option>
+                            <option value="MAX">MAX</option>
                             <option value="Disney plus">Disney plus</option>
                             <option value="Paramount">Paramount</option>
                             <option value="Prime Video">Prime Video</option>
                             <option value="Crunchyroll">Crunchyroll</option>
                             <option value="Star plus">Star plus</option>
+                            <option value="PornHub">PornHub</option>
+                            <option value="Vix">Vix</option>
+                            <option value="Smart One IPTV">Smart One IPTV</option>
+                            <option value="El profe net">El profe net</option>
+                            <option value="IPTV">IPTV</option>
+                            <option value="Apple TV">Apple TV</option>
+                            <option value="Canva Pro">Canva Pro</option>
+                            <option value="DuplexPlay">DuplexPlay</option>
+                            <option value="YouTube Premium">YouTube Premium</option>
+                            <option value="Viki">Viki</option>
+                            <option value="Spotify">Spotify</option>
+                            <option value="Plex">Plex</option>
+
+                            
                         </select>
                     </div>
                     <button type="submit" style={styles.button}>Enviar</button>
