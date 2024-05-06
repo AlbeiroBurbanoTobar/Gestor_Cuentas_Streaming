@@ -122,27 +122,28 @@ function HomePage() {
 
                 </div>
     {/* Contenido existente aquí */}
-            {showModal && (
-                <div style={styles.modal}>
-                    <div style={styles.modalContent}>
-                        <h2>Buscar y Eliminar Suscripciones</h2>
-                        <DatePicker
-                            selected={filterDate}
-                            onChange={date => setFilterDate(date)}
-                            style={styles.input}
-                        />
-                        <button style={styles.button} onClick={fetchSubscriptionsByEndDate}>Buscar Suscripciones</button>
-                        {subscriptionsToDisplay.map(sub => (
-                            <div key={sub.id}>
-                                {sub.userName} - {sub.endDate}
+                            {showModal && (
+                            <div style={styles.modal}>
+                                <div style={styles.modalContent}>
+                                    <h2>Buscar y Eliminar Suscripciones</h2>
+                                    <DatePicker
+                                        selected={filterDate}
+                                        onChange={date => setFilterDate(date)}
+                                        style={styles.input}
+                                    />
+                                    <button style={styles.button} onClick={fetchSubscriptionsByEndDate}>Buscar Suscripciones</button>
+                                    <div style={styles.resultsContainer}>
+                                        {subscriptionsToDisplay.map(sub => (
+                                            <div key={sub.id}>
+                                                {sub.userName} - {sub.endDate}
+                                            </div>
+                                        ))}
+                                    </div>
+                                    <button style={styles.button} onClick={deleteSubscriptions}>Eliminar Suscripciones</button>
+                                    <button style={styles.button} onClick={() => setShowModal(false)}>Cancelar</button>
+                                </div>
                             </div>
-                        ))}
-                        <button style={styles.button} onClick={deleteSubscriptions}>Eliminar Suscripciones</button>
-                        <button style={styles.button} onClick={() => setShowModal(false)}>Cancelar</button>
-                    </div>
-                </div>
-                
-            )}
+                        )}
 
                 <h2 style={styles.formTitle}>Registrar nueva suscripción</h2>
                 <form onSubmit={handleSubmit} style={styles.form}>
@@ -296,12 +297,27 @@ const styles = {
     },
     
     modalContent: {
-        backgroundColor: 'rgba(0, 0, 0, 0.9)',  // Fondo casi negro para el contenido del modal
-        padding: '20px',
-        borderRadius: '8px',
-        width: 'auto',
-        maxWidth: '400px',
-        textAlign: 'center',  // Asegura que el texto esté centrado
+        modalContent: {
+            backgroundColor: 'rgba(0, 0, 0, 0.9)',  // Fondo casi negro para el contenido del modal
+            padding: '20px',
+            borderRadius: '8px',
+            width: 'auto',
+            maxWidth: '400px',
+            maxHeight: '70vh', // Establece una altura máxima para el contenido del modal
+            overflowY: 'auto', // Permite el desplazamiento vertical si el contenido excede la altura máxima
+            textAlign: 'center',  // Asegura que el texto esté centrado
+        },
+    },
+
+    resultsContainer: {
+        maxHeight: '200px', // Establece una altura máxima para el contenedor de resultados
+        overflowY: 'auto', // Permite desplazamiento vertical si el contenido excede la altura máxima
+        marginTop: '10px',
+        padding: '5px',
+        backgroundColor: 'rgba(255, 255, 255, 0.1)', // Color de fondo con algo de transparencia
+        color: 'white', // Texto en blanco
+        borderRadius: '5px', // Bordes redondeados
+        border: '1px solid rgba(255, 255, 255, 0.2)' // Borde sutil
     },
     button: {
         margin: '10px',

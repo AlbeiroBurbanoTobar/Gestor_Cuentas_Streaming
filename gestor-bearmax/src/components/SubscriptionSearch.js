@@ -5,6 +5,8 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 import { collection, query, where, getDocs } from 'firebase/firestore';
 import { useNavigate } from 'react-router-dom';
 import { format } from 'date-fns'; // Importando la función format
+import moment from 'moment-timezone';
+
 
 function SubscriptionSearch() {
     const [phoneNumber, setPhoneNumber] = useState('');
@@ -66,41 +68,40 @@ function SubscriptionSearch() {
 
     const fetchSubscriptions = async () => {
         if (!phoneNumber) {
-            alert("Por favor, ingresa un número de celular vinculada a tu cuenta de whatsapp.");
+            alert("Por favor, ingresa un número de celular vinculado a tu cuenta de WhatsApp.");
             return;
         }
-
+    
         const usersRef = collection(db, "Usuarios");
         const q = query(usersRef, where("phoneNumber", "==", phoneNumber));
         const querySnapshot = await getDocs(q);
-
+    
         if (querySnapshot.empty) {
             setSubscriptions([]);
             alert("No se encontraron suscripciones para este número de celular.");
             return;
         }
-
+    
         const userData = querySnapshot.docs.map(doc => ({
             id: doc.id,
-            ...doc.data()
+            ...doc.data(),
+            startDate: moment(doc.data().startDate).tz('America/Bogota').format('DD-MM-YYYY'),
+            endDate: moment(doc.data().endDate).tz('America/Bogota').format('DD-MM-YYYY'),
+            daysRemaining: calculateDaysRemaining(doc.data().endDate)
         }));
-
-        const updatedSubscriptions = userData.map(user => ({
-            id: user.id, 
-            service: user.service.split(", "),
-            startDate: format(new Date(user.startDate), 'yyyy-MM-dd'), // Formateando la fecha
-            endDate: format(new Date(user.endDate), 'yyyy-MM-dd'), // Formateando la fecha
-            daysRemaining: calculateDaysRemaining(user.endDate)
-        }));
-
-        setSubscriptions(updatedSubscriptions);
+    
+        setSubscriptions(userData);
     };
+    
 
     const calculateDaysRemaining = (endDate) => {
-        const today = new Date();
-        const end = new Date(endDate);
-        return Math.max(Math.ceil((end - today) / (1000 * 60 * 60 * 24)), 0);
+        const today = moment().tz('America/Bogota').startOf('day'); // Fecha de hoy en la zona horaria de Colombia
+        const end = moment(endDate).tz('America/Bogota').startOf('day'); // Fecha de finalización en la zona horaria de Colombia
+    
+        const difference = end.diff(today, 'days'); // Diferencia en días
+        return Math.max(difference, 0); // Asegurarse de que no se devuelvan valores negativos
     };
+    
 
     const closeLogin = () => {
         setShowLogin(false);
