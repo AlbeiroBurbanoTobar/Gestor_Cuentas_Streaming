@@ -1,0 +1,117 @@
+.register-sales-container {
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 30px;
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.1);
+    font-family: Arial, sans-serif;
+    text-align: center; /* Centramos el contenido */
+}
+
+.header {
+    font-size: 24px; /* Aumentamos el tamaño de la fuente */
+    font-weight: bold;
+    margin-bottom: 20px;
+    text-transform: uppercase; /* Colocamos el texto en mayúsculas para un título destacado */
+    color: #333;
+}
+
+.buttons-container {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.green, .red {
+    flex: 1;
+    padding: 12px;
+    font-size: 16px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    color: white;
+    margin: 0 5px; /* Espaciamos los botones entre sí */
+}
+
+.green {
+    background-color: #28a745;
+}
+
+.red {
+    background-color: #dc3545;
+}
+
+.green:hover {
+    background-color: #218838;
+}
+
+.red:hover {
+    background-color: #c82333;
+}
+
+/* Alineación de los campos del formulario */
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Dos columnas iguales */
+    gap: 15px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start; /* Alineamos las etiquetas a la izquierda */
+    margin-bottom: 10px;
+}
+
+label {
+    font-weight: bold;
+    margin-bottom: 5px;
+    font-size: 14px;
+}
+
+input, select, .DatePicker {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+input[readonly] {
+    background-color: #f0f0f0;
+    cursor: not-allowed;
+}
+
+.full-width {
+    grid-column: span 2; /* Hace que el campo ocupe ambas columnas */
+}
+
+.total-sales {
+    font-size: 36px; /* Aumentamos el tamaño de la fuente para destacar */
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.total-sales span {
+    display: block;
+    color: #333;
+    font-size: 14px;
+    margin-top: 5px;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+    .form-grid {
+        grid-template-columns: 1fr; /* Cambiamos a una columna en pantallas pequeñas */
+    }
+
+    .buttons-container {
+        flex-direction: column;
+    }
+
+    .green, .red {
+        margin-bottom: 10px; /* Agregamos espacio entre los botones en pantallas pequeñas */
+        width: 100%; /* Los botones ocupan el ancho completo */
+    }
+}

@@ -1,0 +1,327 @@
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    height: 100vh;
+    padding: 20px;
+    background-color: #f9fafc;
+    width: 100%; /* Asegura que el contenedor ocupa todo el ancho */
+}
+
+.box-container {
+    background-color: white;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+    width: 100%; /* Ocupa todo el ancho de la pantalla */
+    height: auto; /* Ajusta la altura al contenido */
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+
+/* Botón de cierre (X) */
+.close-button {
+    position: absolute;
+    top: 40px;
+    right: 40px;
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: #333;
+}
+
+.close-button:hover {
+    color: #ff0000;
+}
+
+
+
+.header {
+    font-size: 36px;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+/* Alineación de los filtros */
+.filter-container {
+    display: flex;
+    flex-direction: column; /* Alineación vertical */
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 30px; /* Aumentar espacio con los siguientes elementos */
+}
+
+.select, .button {
+    margin-bottom: 15px; /* Separación entre el select y el botón */
+}
+
+.select {
+    padding: 12px;
+    font-size: 16px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    background-color: white;
+    width: 200px;
+}
+
+.button {
+    padding: 12px 24px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s;
+    width: 200px;
+}
+
+.button:hover {
+    background-color: #0056b3;
+}
+
+.sales-type-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Distribución automática de las tarjetas */
+    gap: 20px;
+    margin-top: 30px;
+}
+
+.sales-type-box {
+    background-color: #fdfdfd;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s;
+}
+
+.sales-type-box:hover {
+    transform: translateY(-5px);
+}
+
+.stats-container {
+    display: flex;
+    justify-content: space-around;
+    gap: 20px;
+    margin-top: 30px;
+    flex-wrap: wrap; /* Permite que los elementos se envuelvan en varias líneas si es necesario */
+}
+
+/* Responsive para pantallas más pequeñas */
+@media (max-width: 768px) {
+    .stats-container {
+        flex-direction: column; /* Apila los elementos verticalmente en pantallas pequeñas */
+        align-items: center; /* Centra los elementos */
+        gap: 15px; /* Ajusta el espacio entre los elementos */
+    }
+
+    .stat-box {
+        width: 90%; /* Asegura que cada caja ocupe el 90% del ancho del contenedor en pantallas pequeñas */
+    }
+}
+
+
+.stat-box {
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 12px;
+    width: 30%;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+}
+
+.stat-box h3 {
+    font-size: 18px;
+    color: #333;
+}
+
+.stat-box p {
+    font-size: 24px;
+    font-weight: bold;
+    margin-top: 10px;
+    color: #28a745;
+}
+
+.sub-header {
+    font-size: 26px;
+    margin-top: 30px;
+    color: #333;
+    text-align: center;
+}
+
+
+/* Caja contenedora */
+.box-container {
+    background-color: white;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+    width: 100%; /* Ajusta al 100% del contenedor */
+    max-width: 1200px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+
+
+
+/* Estilos del encabezado */
+.header {
+    font-size: 36px;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+/* Alineación de los filtros */
+.filter-container {
+    display: flex;
+    flex-direction: column; /* Alineación vertical */
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 30px; /* Aumentar espacio con los siguientes elementos */
+}
+
+.select, .button {
+    margin-bottom: 15px; /* Separación entre el select y el botón */
+}
+
+.select {
+    padding: 12px;
+    font-size: 16px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    background-color: white;
+    width: 200px;
+}
+
+.button {
+    padding: 12px 24px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s;
+    width: 200px;
+}
+
+.button:hover {
+    background-color: #0056b3;
+}
+
+/* Contenedor de las tarjetas de tipo de venta */
+.sales-type-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Distribución automática */
+    gap: 20px;
+    margin-top: 30px;
+}
+
+/* Estilos de las tarjetas de suscripción */
+.sales-type-box {
+    background-color: #fdfdfd;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s;
+}
+
+.sales-type-box:hover {
+    transform: translateY(-5px);
+}
+
+/* Contenedor de las estadísticas */
+.stats-container {
+    display: flex;
+    justify-content: space-around;
+    gap: 20px;
+    margin-top: 30px;
+    flex-wrap: wrap; /* Permite que los elementos se envuelvan en varias líneas si es necesario */
+}
+
+/* Tarjetas de estadísticas */
+.stat-box {
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 12px;
+    width: 30%;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+}
+
+.stat-box h3 {
+    font-size: 18px;
+    color: #333;
+}
+
+.stat-box p {
+    font-size: 24px;
+    font-weight: bold;
+    margin-top: 10px;
+    color: #28a745;
+}
+
+/* Título de la sección de estadísticas */
+.sub-header {
+    font-size: 26px;
+    margin-top: 30px;
+    color: #333;
+    text-align: center;
+}
+
+/* Responsive para pantallas más pequeñas */
+@media (max-width: 1024px) {
+    .box-container {
+        max-width: 95%; /* Reduce el ancho máximo para tabletas */
+        padding: 20px;
+    }
+    
+    .stat-box {
+        width: 45%; /* Ajuste del ancho para tabletas */
+    }
+}
+
+@media (max-width: 768px) {
+    .stats-container {
+        flex-direction: column; /* Apila los elementos verticalmente en pantallas pequeñas */
+        align-items: center; /* Centra los elementos */
+        gap: 15px; /* Ajusta el espacio entre los elementos */
+    }
+
+    .stat-box {
+        width: 90%; /* Asegura que cada caja ocupe el 90% del ancho del contenedor en pantallas pequeñas */
+    }
+
+    .sales-type-box {
+        width: 90%; /* Asegura que las tarjetas también sean más anchas en pantallas pequeñas */
+    }
+
+    .box-container {
+        max-width: 95%; /* Asegura que el contenedor ocupe casi todo el ancho de la pantalla */
+    }
+
+    .close-button {
+        top: 10px;
+        right: 10px;
+        font-size: 14px; /* Ajusta el tamaño del botón de cierre para pantallas pequeñas */
+    }
+}
+
+/* Ajustar el contenedor del gráfico para que sea responsive */
+.chart-container {
+    width: 80%;
+    max-width: 80%; /* Ajusta el tamaño máximo al 100% para pantallas grandes */    height: auto;
+    margin: 20px auto;
+    padding: 10px; /* Un poco de padding para dar espacio alrededor */
+}
+
+/* Asegurar que los gráficos se ajusten bien a pantallas pequeñas */
+@media (max-width: 768px) {
+    .chart-container {
+        max-width: 100%; /* El ancho máximo será del 100% en pantallas más pequeñas */
+        height: auto; /* Altura automática para que escale proporcionalmente */
+    }
+}

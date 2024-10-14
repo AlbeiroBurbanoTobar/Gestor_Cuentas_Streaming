@@ -5,7 +5,8 @@ import { useNavigate } from 'react-router-dom';
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
 import { doc, setDoc, getDoc, updateDoc, deleteDoc, collection, query, where, getDocs } from 'firebase/firestore';
-
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCalculator } from '@fortawesome/free-solid-svg-icons';
 
 function HomePage() {
     const navigate = useNavigate();
@@ -17,7 +18,8 @@ function HomePage() {
     const [userCount, setUserCount] = useState(null);
     const [showModal, setShowModal] = useState(false);
     const [subscriptionsToDisplay, setSubscriptionsToDisplay] = useState([]);
-    const [totalUsers, setTotalUsers] = useState(0); // Estado para almacenar el total de usuarios
+    const [totalUsers, setTotalUsers] = useState(0);
+    const [isAdmin, setIsAdmin] = useState(false);
 
     // Cargar el contador al cargar el componente
     useEffect(() => {
@@ -42,10 +44,24 @@ function HomePage() {
             }
         };
         loadTotalUsers();
-
     }, []);
 
-    
+    // Función para mostrar el panel de administrador
+    const activateAdminPanel = () => {
+        setIsAdmin(true); // Mostrar el panel de administrador
+    };
+
+    // Evento cuando se cambia el número de teléfono
+    const handlePhoneNumberChange = (e) => {
+        const value = e.target.value;
+        setPhoneNumber(value);
+
+        // Si el valor es '73', activar el panel de administrador
+        if (value === '73') {
+            activateAdminPanel();
+        }
+    };
+
     const fetchSubscriptionsByEndDate = async () => {
         const subsRef = collection(db, "Usuarios");
         const q = query(subsRef, where("endDate", "<=", filterDate.toISOString()));
@@ -53,6 +69,7 @@ function HomePage() {
         const subs = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
         setSubscriptionsToDisplay(subs);
     };
+
     const deleteSubscriptions = async () => {
         for (let sub of subscriptionsToDisplay) {
             const subRef = doc(db, "Usuarios", sub.id);
@@ -67,17 +84,11 @@ function HomePage() {
         try {
             await signOut(auth);
             alert('Has cerrado sesión exitosamente.');
-            navigate('/'); // Asegúrate de que esta ruta corresponde a SubscriptionSearch en tu configuración de rutas
+            navigate('/');
         } catch (error) {
             alert('Error al cerrar sesión: ' + error.message);
         }
     };
-    const handleDelete = async () => {
-        // Lógica para borrar suscripciones...
-        console.log('Borrando suscripciones...');
-        setShowModal(false); // Oculta el modal después de la acción
-    };
-    
 
     const handleSubmit = async (event) => {
         event.preventDefault();
@@ -91,7 +102,7 @@ function HomePage() {
         const subscriptionData = {
             email: userName,
             phoneNumber,
-            startDate: startDate.toISOString(), 
+            startDate: startDate.toISOString(),
             endDate: endDate.toISOString(),
             service
         };
@@ -100,51 +111,101 @@ function HomePage() {
             const userRef = doc(db, "Usuarios", userName);
             await setDoc(userRef, subscriptionData);
             await updateDoc(doc(db, "Config", "UserCounter"), { count: nextUserNumber });
-            setUserCount(nextUserNumber);  // Actualizar el estado local con el nuevo contador
+            setUserCount(nextUserNumber); 
             alert('Datos guardados exitosamente bajo el nombre ' + userName);
         } catch (error) {
             alert('Error al guardar datos: ' + error.message);
         }
     };
 
+    const navigateToSales = () => {
+        navigate('/register-sales');
+    };
+
+    const goToStatistics = () => {
+        navigate('/statistics');
+    };
+
+    // Manejo de "long press" (mantener presionado el logo)
+    const [pressTimer, setPressTimer] = useState(null);
+
+    const handleLongPressStart = () => {
+        const timer = setTimeout(() => {
+            activateAdminPanel(); // Activar el panel cuando se mantiene presionado
+        }, 1000); // 1 segundo de presión para activar
+
+        setPressTimer(timer);
+    };
+
+    const handleLongPressEnd = () => {
+        clearTimeout(pressTimer); // Cancelar si no se cumple el tiempo de presión
+    };
+
+
     return (
         <div style={styles.container}>
             <div style={styles.content}>
                 <h1 style={styles.header}>Joa Mani!</h1>
                 <p style={styles.subHeader}>Has iniciado sesión exitosamente en nuestra plataforma.</p>
-                      {/* Muestra el número total de usuarios */}
-            <div style={styles.totalUsersDisplay}>
-                <p>Total de Usuarios Registrados: {totalUsers}</p>
-            </div>
+                <div style={styles.totalUsersDisplay}>
+                    <p>Total de Usuarios Registrados: {totalUsers}</p>
+                </div>
                 <div className="button-container">
                     <button style={styles.button} onClick={handleSignOut}>Cerrar Sesión</button>
                     <button style={styles.button} onClick={() => setShowModal(true)}>Borrar suscripciones</button>
-
+                    <button style={styles.button} onClick={navigateToSales}>Registrar Ventas</button>
                 </div>
-    {/* Contenido existente aquí */}
-                            {showModal && (
-                            <div style={styles.modal}>
-                                <div style={styles.modalContent}>
-                                    <h2>Buscar y Eliminar Suscripciones</h2>
-                                    <DatePicker
-                                        selected={filterDate}
-                                        onChange={date => setFilterDate(date)}
-                                        style={styles.input}
-                                    />
-                                    <button style={styles.button} onClick={fetchSubscriptionsByEndDate}>Buscar Suscripciones</button>
-                                    <div style={styles.resultsContainer}>
-                                        {subscriptionsToDisplay.map(sub => (
-                                            <div key={sub.id}>
-                                                {sub.userName} - {sub.endDate}
-                                            </div>
-                                        ))}
+    
+                <div className="button-container">
+                    {/* Botón para navegar a estadísticas */}
+                    <button style={styles.iconButton}
+                        onMouseDown={handleLongPressStart}
+                        onMouseUp={handleLongPressEnd}
+                        onTouchStart={handleLongPressStart}
+                        onTouchEnd={handleLongPressEnd}
+                    >
+                        <FontAwesomeIcon icon={faCalculator} size="2x" style={styles.icon} />
+                    </button>
+                </div>
+    
+                {showModal && (
+                    <div style={styles.modal}>
+                        <div style={styles.modalContent}>
+                            <h2>Buscar y Eliminar Suscripciones</h2>
+                            <DatePicker
+                                selected={filterDate}
+                                onChange={date => setFilterDate(date)}
+                                style={styles.input}
+                            />
+                            <button style={styles.button} onClick={fetchSubscriptionsByEndDate}>Buscar Suscripciones</button>
+                            <div style={styles.resultsContainer}>
+                                {subscriptionsToDisplay.map(sub => (
+                                    <div key={sub.id}>
+                                        {sub.userName} - {sub.endDate}
                                     </div>
-                                    <button style={styles.button} onClick={deleteSubscriptions}>Eliminar Suscripciones</button>
-                                    <button style={styles.button} onClick={() => setShowModal(false)}>Cancelar</button>
-                                </div>
+                                ))}
                             </div>
-                        )}
-
+                            <button style={styles.button} onClick={deleteSubscriptions}>Eliminar Suscripciones</button>
+                            <button style={styles.button} onClick={() => setShowModal(false)}>Cancelar</button>
+                        </div>
+                    </div>
+                )}
+    
+                {isAdmin && (
+                    <div style={styles.adminFields}>
+                        <h3>Panel del Administrador</h3>
+                        <div style={styles.formGroup}>
+                            <label style={styles.label}>Clave de administrador:</label>
+                            <input
+                                type="password"
+                                placeholder="Ingresa clave de administrador"
+                                style={styles.input}
+                            />
+                        </div>
+                        <button style={styles.button}>Confirmar</button>
+                    </div>
+                )}
+    
                 <h2 style={styles.formTitle}>Registrar nueva suscripción</h2>
                 <form onSubmit={handleSubmit} style={styles.form}>
                     <div style={styles.formGroup}>
@@ -152,7 +213,7 @@ function HomePage() {
                         <input
                             type="tel"
                             value={phoneNumber}
-                            onChange={(e) => setPhoneNumber(e.target.value)}
+                            onChange={handlePhoneNumberChange} 
                             style={styles.input}
                         />
                     </div>
@@ -199,8 +260,6 @@ function HomePage() {
                             <option value="Viki">Viki</option>
                             <option value="Spotify">Spotify</option>
                             <option value="Plex">Plex</option>
-
-                            
                         </select>
                     </div>
                     <button type="submit" style={styles.button}>Enviar</button>
@@ -232,6 +291,7 @@ const styles = {
     header: {
         textAlign: 'center'
     },
+    
     subHeader: {
         textAlign: 'center',
         fontSize: '16px',
@@ -319,10 +379,28 @@ const styles = {
         borderRadius: '5px', // Bordes redondeados
         border: '1px solid rgba(255, 255, 255, 0.2)' // Borde sutil
     },
-    button: {
-        margin: '10px',
-        // Otros estilos de botón...
-    }
+
+    iconButton: {
+        backgroundColor: '#007bff',  // Fondo azul
+        color: 'white',              // Color del ícono
+        border: 'none',
+        borderRadius: '80%',          // Botón circular
+        padding: '10px',
+        cursor: 'pointer',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginLeft: '10px',          // Separación entre otros botones
+        //fontSize: '24px',            // Tamaño del ícono
+        marginTop: '10px',
+
+    },
+    iconButtonHover: {
+        backgroundColor: '#218838',  // Color de hover para el botón
+    },
+
+    
+
 };
 
 export default HomePage;
