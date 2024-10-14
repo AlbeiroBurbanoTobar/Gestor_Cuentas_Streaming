@@ -132,7 +132,15 @@ function SubscriptionSearch() {
                 onChange={(e) => setPhoneNumber(e.target.value)}
                 placeholder="Ingresa tu número de celular"
             />
-            <button onClick={fetchSubscriptions}>Buscar</button>
+            <button 
+            onClick={fetchSubscriptions} 
+            onMouseDown={handleLogoPress}  
+            onMouseUp={handleLogoRelease}  
+            onMouseLeave={handleLogoRelease}  
+            >
+            Buscar
+            </button>
+
             {subscriptions.length > 0 && (
                 <ul className="subscriptions-list">
                     {subscriptions.map((sub, index) => (
