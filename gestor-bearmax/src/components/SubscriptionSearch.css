@@ -33,7 +33,7 @@ body {
 }
 
 .subscription-search-container input[type="tel"] {
-    width: 100%; /* Cambiado para llenar el ancho del contenedor */
+    width: 98%; /* Cambiado para llenar el ancho del contenedor */
     height: 30px;
     padding: -20px;
     margin-bottom: 10px;

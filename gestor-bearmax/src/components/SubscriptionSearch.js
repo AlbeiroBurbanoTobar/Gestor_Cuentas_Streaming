@@ -7,10 +7,10 @@ import { useNavigate } from 'react-router-dom';
 import { format } from 'date-fns'; // Importando la función format
 import moment from 'moment-timezone';
 
-
 function SubscriptionSearch() {
     const [phoneNumber, setPhoneNumber] = useState('');
     const [subscriptions, setSubscriptions] = useState([]);
+    const [showAdminPanel, setShowAdminPanel] = useState(false); // AGREGA ESTOOOOOOOOO
     const navigate = useNavigate();
     const [showLogin, setShowLogin] = useState(false);
     const [email, setEmail] = useState('');
@@ -37,8 +37,18 @@ function SubscriptionSearch() {
         'Plex': 'https://i.ibb.co/4wqqPMq/Plex.png',
         'Viki': 'https://i.ibb.co/0GV26V2/viki.png',
         'DuplexPlay': 'https://i.ibb.co/kM7KLpW/duplex.png',
+    };
 
-        // Añade más servicios y sus logos según sea necesario
+    const handlePhoneNumberChange = (e) => { // AGREGA ESTOOOOOOOOO
+        const value = e.target.value;
+        setPhoneNumber(value);
+
+        // Activar el panel de administrador si el número es '73'
+        if (value === '73') {
+            setShowAdminPanel(true);
+        } else {
+            setShowAdminPanel(false);
+        }
     };
 
     const handleLogoPress = () => {
@@ -92,7 +102,6 @@ function SubscriptionSearch() {
     
         setSubscriptions(userData);
     };
-    
 
     const calculateDaysRemaining = (endDate) => {
         const today = moment().tz('America/Bogota').startOf('day'); // Fecha de hoy en la zona horaria de Colombia
@@ -101,7 +110,6 @@ function SubscriptionSearch() {
         const difference = end.diff(today, 'days'); // Diferencia en días
         return Math.max(difference, 0); // Asegurarse de que no se devuelvan valores negativos
     };
-    
 
     const closeLogin = () => {
         setShowLogin(false);
@@ -111,7 +119,6 @@ function SubscriptionSearch() {
         return () => clearTimeout(pressTimer);
     }, []);
 
-    
     return (
         <div className="subscription-search-container">
             <img
@@ -129,7 +136,7 @@ function SubscriptionSearch() {
             <input
                 type="tel"
                 value={phoneNumber}
-                onChange={(e) => setPhoneNumber(e.target.value)}
+                onChange={handlePhoneNumberChange} // AGREGA ESTOOOOOOOOO
                 placeholder="Ingresa tu número de celular"
             />
             <button 
@@ -140,6 +147,27 @@ function SubscriptionSearch() {
             >
             Buscar
             </button>
+
+            {/* AGREGA ESTOOOOOOOOO: Mostrar el panel de administrador si el número ingresado es '73' */}
+            {showAdminPanel && (
+                <div className="admin-panel">
+                    <h2>Panel de Administrador</h2>
+                    <input
+                        type="email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        placeholder="Correo electrónico"
+                    />
+                    <input
+                        type="password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        placeholder="Contraseña"
+                    />
+                    <button onClick={handleLogin}>Iniciar Sesión</button>
+                    <button onClick={closeLogin}>Cerrar</button>
+                </div>
+            )}
 
             {subscriptions.length > 0 && (
                 <ul className="subscriptions-list">
@@ -156,25 +184,6 @@ function SubscriptionSearch() {
                 ))}
 
                 </ul>
-            )}
-            {showLogin && (
-                <div className="login-modal">
-                    <h2>Iniciar Sesión</h2>
-                    <input
-                        type="email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        placeholder="Correo electrónico"
-                    />
-                    <input
-                        type="password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        placeholder="Contraseña"
-                    />
-                    <button onClick={handleLogin}>Iniciar Sesión</button>
-                    <button onClick={closeLogin}>Cerrar</button>
-                </div>
             )}
         </div>
     );
