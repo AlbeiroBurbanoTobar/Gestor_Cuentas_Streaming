@@ -157,16 +157,19 @@ function HomePage() {
                 </div>
     
                 <div className="button-container">
-                    {/* Botón para navegar a estadísticas */}
-                    <button style={styles.iconButton}
-                        onMouseDown={handleLongPressStart}
-                        onMouseUp={handleLongPressEnd}
-                        onTouchStart={handleLongPressStart}
-                        onTouchEnd={handleLongPressEnd}
-                    >
-                        <FontAwesomeIcon icon={faCalculator} size="2x" style={styles.icon} />
-                    </button>
-                </div>
+                    
+                {/* Botón para navegar a estadísticas */}
+                <button style={styles.iconButton}
+                    onClick={goToStatistics} // Redirige a la página de estadísticas
+                    onMouseDown={handleLongPressStart}
+                    onMouseUp={handleLongPressEnd}
+                    onTouchStart={handleLongPressStart}
+                    onTouchEnd={handleLongPressEnd}
+                >
+                    <FontAwesomeIcon icon={faCalculator} size="2x" style={styles.icon} />
+                </button>
+            </div>
+
     
                 {showModal && (
                     <div style={styles.modal}>
